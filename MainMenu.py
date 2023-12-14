@@ -10,19 +10,17 @@ class MainMenu:
         self.title = "Mini Games"
 
     def setTitle(self, newTitle):
-        if newTitle is not None:
-            self.title = newTitle
-            return True
+        if newTitle is None:
+            raise Exception("Title cannot be None")
 
-        return False
+        self.title = newTitle
 
     def addGame(self, gameObject):
         """" Game object must have a title and a startGame method. """
-        if gameObject is not None:
-            self.gamesArray.append(gameObject)
-            return True
+        if gameObject is None:
+            raise Exception("Game object cannot be None")
 
-        return False
+        self.gamesArray.append(gameObject)
 
     def showGames(self):
         if len(self.gamesArray) == 0:

@@ -1,7 +1,7 @@
 import os
 from time import sleep
 
-from MiniGamesAI.utilities import getAndValidateUserInput
+from utilities import getAndValidateUserInput
 
 
 class MainMenu:
@@ -34,6 +34,7 @@ class MainMenu:
             except AttributeError:
                 print("Game " + str(i + 1) + " has no title.")
 
+        print("\t", str(len(self.gamesArray) + 1) + ": Exit")
         print()
         return True
 
@@ -42,15 +43,17 @@ class MainMenu:
         if not self.showGames():
             return False
 
-        userChoice = int(getAndValidateUserInput([str(i + 1) for i in range(len(self.gamesArray))],
+        userChoice = int(getAndValidateUserInput([str(i + 1) for i in range(len(self.gamesArray) + 1)],
                                                  "Enter your choice: ", "Invalid choice. Please try again."))
 
-        print("You chose: " + self.gamesArray[userChoice - 1].getTitle())
-        print("Starting game...")
-        print("\n\n")
-        sleep(1)
-
+        if userChoice == len(self.gamesArray) + 1:
+            return None
         try:
+            print("You chose: " + self.gamesArray[userChoice - 1].getTitle())
+            print("Starting game...")
+            print("\n\n")
+            sleep(1)  # wait for 1 second to let the user read the message
+            
             self.gamesArray[userChoice - 1].startGame()
         except AttributeError:
             print("Game " + str(userChoice) + " has no startGame method.")
@@ -60,16 +63,19 @@ class MainMenu:
 
     def startMenuLoop(self):
         while True:
+            # clear screen and show menu
+            os.system("cls")
 
-            if not self.showMenu():
+            menuFlag = self.showMenu()  # returns None if user chose to exit, False if user chose to go back to main menu, True if user chose to play a game
+            if menuFlag is None:
+                print("Exiting...")
+                break
+            elif not menuFlag:
                 break
 
             print("Do you want to play another game? (y/n)")
             userChoice = getAndValidateUserInput(["y", "n", "Y", "N"],
                                                  "Enter your choice: ",
                                                  "Invalid choice. Please try again.")
-            if userChoice == 0:
+            if userChoice.lower() == "n":
                 break
-
-            # clear the screen if the user
-            os.system('cls' if os.name == 'nt' else 'clear')

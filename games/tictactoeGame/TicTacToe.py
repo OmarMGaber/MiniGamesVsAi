@@ -1,5 +1,5 @@
-from MiniGamesAI.games.MiniGame import MiniGame
-from MiniGamesAI.utilities import getAndValidateUserInput
+import utilities as util
+from games.MiniGame import MiniGame
 
 
 class TicTacToe(MiniGame):
@@ -150,24 +150,24 @@ class TicTacToe(MiniGame):
     # @staticmethod
     def getGameSettingsFromUser(self):
         print("Do you want to play against AI? (y/n)")
-        userChoice = getAndValidateUserInput(["y", "n", "Y", "N"], "Enter your choice: ",
-                                             "Invalid choice. Please try again.")
+        userChoice = util.getAndValidateUserInput(["y", "n", "Y", "N"], "Enter your choice: ",
+                                                  "Invalid choice. Please try again.")
         if userChoice.lower() == "y":
             print("Choose your AI algorithm: ")
             print("1: Minimax")
             print("2: Alpha-Beta Pruning")
-            userChoice = getAndValidateUserInput(["1", "2"], "Enter your choice: ",
-                                                 "Invalid choice. Please try again.")
+            userChoice = util.getAndValidateUserInput(["1", "2"], "Enter your choice: ",
+                                                      "Invalid choice. Please try again.")
             if userChoice == "1":
-                self.setAiAlgorithm("Minimax")
+                pass  # self.setAiAlgorithm(Minimax.Minimax())
             else:
-                self.setAiAlgorithm("Alpha-Beta Pruning")
+                pass  # self.setAiAlgorithm(AlphaBetaPruning.AlphaBetaPruning())
 
             print("Choose your turn: ")
             print("1: X")
             print("2: O")
-            userChoice = getAndValidateUserInput(["1", "2"], "Enter your choice: ",
-                                                 "Invalid choice. Please try again.")
+            userChoice = util.getAndValidateUserInput(["1", "2"], "Enter your choice: ",
+                                                      "Invalid choice. Please try again.")
             if userChoice == "1":
                 self.setAiTurn(2)
             else:

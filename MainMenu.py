@@ -1,3 +1,9 @@
+import os
+from time import sleep
+
+from MiniGamesAI.utilities import getAndValidateUserInput
+
+
 class MainMenu:
     def __init__(self):
         self.gamesArray = []
@@ -25,37 +31,47 @@ class MainMenu:
 
         print("Choose a game: ")
         for i in range(len(self.gamesArray)):
-            print(str(i) + ": " + self.gamesArray[i].title)
+            try:
+                print("\t", str(i + 1) + ": " + self.gamesArray[i].getTitle())
+            except AttributeError:
+                print("Game " + str(i + 1) + " has no title.")
+
+        print()
+        return True
+
+    def showMenu(self):
+        print("==== " + self.title + " ====")
+        if not self.showGames():
+            return False
+
+        userChoice = int(getAndValidateUserInput([str(i + 1) for i in range(len(self.gamesArray))],
+                                                 "Enter your choice: ", "Invalid choice. Please try again."))
+
+        print("You chose: " + self.gamesArray[userChoice - 1].getTitle())
+        print("Starting game...")
+        print("\n\n")
+        sleep(1)
+
+        try:
+            self.gamesArray[userChoice - 1].startGame()
+        except AttributeError:
+            print("Game " + str(userChoice) + " has no startGame method.")
+            return False
 
         return True
 
-    @staticmethod
-    def getAndValidateUserChoice(upperLimit, lowerLimit=0):
-        while True:
-            try:
-                userChoice = int(input("Enter your choice: "))
-                if lowerLimit <= userChoice <= upperLimit:
-                    return userChoice
-                else:
-                    print("Invalid choice. Please try again.")
-            except ValueError:
-                print("Invalid choice. Please try again.")
-
-    def showMenu(self):
-        print(self.title)
-        ret = self.showGames()
-        if not ret:
-            return False
-        userChoice = self.getAndValidateUserChoice(len(self.gamesArray) - 1)
-        print("You chose: " + self.gamesArray[userChoice].title + ". Starting game...")
-        self.gamesArray[userChoice].startGame()
-
     def startMenuLoop(self):
         while True:
-            ret = self.showMenu()
-            if not ret:
+
+            if not self.showMenu():
                 break
-            print("Do you want to play another game?")
-            userChoice = self.getAndValidateUserChoice(1, 0)
+
+            print("Do you want to play another game? (y/n)")
+            userChoice = getAndValidateUserInput(["y", "n", "Y", "N"],
+                                                 "Enter your choice: ",
+                                                 "Invalid choice. Please try again.")
             if userChoice == 0:
                 break
+
+            # clear the screen if the user
+            os.system('cls' if os.name == 'nt' else 'clear')

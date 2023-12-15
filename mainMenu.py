@@ -53,7 +53,7 @@ class MainMenu:
             print("Starting game...")
             print("\n\n")
             sleep(1)  # wait for 1 second to let the user read the message
-            
+
             self.gamesArray[userChoice - 1].startGame()
         except AttributeError:
             print("Game " + str(userChoice) + " has no startGame method.")

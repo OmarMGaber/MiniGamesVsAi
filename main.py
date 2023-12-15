@@ -1,5 +1,5 @@
-import MainMenu
-from games.tictactoeGame import TicTacToe
+import mainMenu
+from games.tictactoeGame import tictactoe
 
 menu = MainMenu.MainMenu()
 

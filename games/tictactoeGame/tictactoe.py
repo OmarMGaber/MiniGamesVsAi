@@ -1,5 +1,5 @@
 import utilities as util
-from games.MiniGame import MiniGame
+from games.miniGame import MiniGame
 
 
 class TicTacToe(MiniGame):

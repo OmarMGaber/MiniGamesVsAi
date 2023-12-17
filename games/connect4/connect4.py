@@ -248,7 +248,7 @@ class ConnectFour(MiniGame):
                 print("Yellow")
 
             move = int(getAndValidateUserInput([str(i + 1) for i in range(7)], "Enter a valid move (1-7): ",
-                                           "Invalid move. Please try again.")) - 1
+                                               "Invalid move. Please try again.")) - 1
 
             if not self.makeMove(self.board, move, self.currentPlayer):
                 print("Invalid move")
@@ -273,6 +273,8 @@ class ConnectFour(MiniGame):
     def startGame(self):
         self.startGUI()
 
-c4 = ConnectFour("Connect Four")
-# c4.startGame()
-c4.startConsole()
+
+if __name__ == '__main__':
+    c4 = ConnectFour("Connect Four")
+    # c4.startGame()
+    c4.startConsole()

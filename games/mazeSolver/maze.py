@@ -9,4 +9,6 @@ testMaze.CreateMaze(xGoal , yGoal)
 xStrat , yStart = random.randint(0,testMaze.rows) , random.randint(0 , testMaze.cols)
 
 testAgent = agent(testMaze , xStrat , yStart , shape='arrow' ,color='red' , goal=(xGoal,yGoal))
-testMaze.run()
+
+if "__main__" == __name__:
+    testMaze.run()

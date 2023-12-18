@@ -5,6 +5,10 @@ from utilities import getAndValidateUserInput
 
 
 class MainMenu:
+    EXIT_FLAG = 0
+    NO_GAMES_FOUND_FLAG = -1
+
+
     def __init__(self):
         self.gamesArray = []
         self.title = "Mini Games"
@@ -41,23 +45,22 @@ class MainMenu:
     def showMenu(self):
         print("==== " + self.title + " ====")
         if not self.showGames():
-            return False
+            return MainMenu.NO_GAMES_FOUND_FLAG
 
         userChoice = int(getAndValidateUserInput([str(i + 1) for i in range(len(self.gamesArray) + 1)],
                                                  "Enter your choice: ", "Invalid choice. Please try again."))
 
         if userChoice == len(self.gamesArray) + 1:
-            return None
+            return MainMenu.EXIT_FLAG
         try:
             print("You chose: " + self.gamesArray[userChoice - 1].getTitle())
             print("Starting game...")
             print("\n\n")
             sleep(1)  # wait for 1 second to let the user read the message
-            
+
             self.gamesArray[userChoice - 1].startGame()
         except AttributeError:
-            print("Game " + str(userChoice) + " has no startGame method.")
-            return False
+            raise Exception("Game " + str(userChoice) + " has no startGame method.")
 
         return True
 
@@ -66,12 +69,13 @@ class MainMenu:
             # clear screen and show menu
             os.system("cls")
 
-            menuFlag = self.showMenu()  # returns None if user chose to exit, False if user chose to go back to main menu, True if user chose to play a game
-            if menuFlag is None:
+            menuFlag = self.showMenu()
+            if menuFlag is MainMenu.EXIT_FLAG:
                 print("Exiting...")
-                break
-            elif not menuFlag:
-                break
+                exit(MainMenu.EXIT_FLAG)
+
+            elif menuFlag is MainMenu.NO_GAMES_FOUND_FLAG:
+                exit(MainMenu.NO_GAMES_FOUND_FLAG)
 
             print("Do you want to play another game? (y/n)")
             userChoice = getAndValidateUserInput(["y", "n", "Y", "N"],

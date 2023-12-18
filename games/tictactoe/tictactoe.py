@@ -1,5 +1,5 @@
 import utilities as util
-from games.MiniGame import MiniGame
+from games.miniGame import MiniGame
 
 
 class TicTacToe(MiniGame):
@@ -101,7 +101,7 @@ class TicTacToe(MiniGame):
         return moves
 
     def checkMove(self, move):
-        if move[0] < 0 or move[0] > self.boardSideLength - 1:
+        if move[0] < 0 or move[0] > self.boardSideLength - 1 or move[1] < 0 or move[1] > self.boardSideLength - 1:
             return False
         if self.board[move[0]][move[1]] == TicTacToe.emptySpotChar:
             return True

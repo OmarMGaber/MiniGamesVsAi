@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 from io import StringIO
-from games.tictactoeGame.tictactoe import TicTacToe
+from games.tictactoe.tictactoe import TicTacToe
 
 
 class TestTicTacToe(unittest.TestCase):

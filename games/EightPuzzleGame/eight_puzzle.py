@@ -1,6 +1,6 @@
 import copy
 import random
-from games.MiniGame import MiniGame
+from games.miniGame import MiniGame
 from heapq import heappush, heappop
 
 # initial = [[2, 8, 3],

@@ -1,4 +1,5 @@
 import os
+import platform
 from time import sleep
 
 from utilities import getAndValidateUserInput
@@ -8,10 +9,16 @@ class MainMenu:
     EXIT_FLAG = 0
     NO_GAMES_FOUND_FLAG = -1
 
+    @staticmethod
+    def clearScreen():
+        if platform.system() == "Windows":
+            os.system("cls")
+        else:  # Linux or Mac
+            os.system("clear")
 
-    def __init__(self):
+    def __init__(self, title):
         self.gamesArray = []
-        self.title = "Mini Games"
+        self.title = title
 
     def setTitle(self, newTitle):
         if newTitle is None:
@@ -57,7 +64,7 @@ class MainMenu:
             print("Starting game...")
             print("\n\n")
             sleep(1)  # wait for 1 second to let the user read the message
-            os.system("cls")
+            MainMenu.clearScreen()
 
             self.gamesArray[userChoice - 1].startGame()
             # reset the game to its initial state after it finishes
@@ -66,7 +73,7 @@ class MainMenu:
             print("Press q to go back to the menu.")
             while input().lower() != "q":
                 pass
-            os.system("cls")
+            MainMenu.clearScreen()
 
         except AttributeError:
             raise Exception("Game " + str(userChoice) + " has no startGame method.")
@@ -76,7 +83,7 @@ class MainMenu:
     def startMenuLoop(self):
         while True:
             # clear screen and show menu
-            os.system("cls")
+            MainMenu.clearScreen()
 
             menuFlag = self.showMenu()
             if menuFlag is MainMenu.EXIT_FLAG:

@@ -127,7 +127,7 @@ class ConnectFour(MiniGame):
         canvas = tk.Canvas(root, width=width, height=height, bg="light gray", bd=0, highlightthickness=0)
         canvas.pack()
 
-        def resetGame():
+        def reset():
             self.resetGame()
             drawBoard()
             updateCurrentPlayerColor()
@@ -135,7 +135,7 @@ class ConnectFour(MiniGame):
             showResetButton(False)
 
         # add reset button
-        resetButton = tk.Button(root, text="Reset", font=("Arial", 20), command=resetGame)
+        resetButton = tk.Button(root, text="Reset", font=("Arial", 20), command=reset)
 
         title = tk.Label(root, text=self.title, font=("Arial", 30))
 
@@ -247,12 +247,16 @@ class ConnectFour(MiniGame):
             elif self.currentPlayer == ConnectFour.YELLOW_TURN:
                 print("Yellow")
 
-            move = int(getAndValidateUserInput([str(i + 1) for i in range(7)], "Enter a valid move (1-7): ",
-                                               "Invalid move. Please try again.")) - 1
+            while True:
+                column = int(getAndValidateUserInput([str(i + 1) for i in range(7)],
+                                                     "Enter a column: ",
+                                                     "Invalid column. Please try again.")) - 1
 
-            if not self.makeMove(self.board, move, self.currentPlayer):
-                print("Invalid move")
-                continue
+                if not self.makeMove(self.board, column, self.currentPlayer):
+                    print("Invalid move. Please try again.")
+                else:
+                    break
+
 
             winner = ConnectFour.checkWin(self.board)
             if winner != 0:

@@ -57,8 +57,17 @@ class MainMenu:
             print("Starting game...")
             print("\n\n")
             sleep(1)  # wait for 1 second to let the user read the message
+            os.system("cls")
 
             self.gamesArray[userChoice - 1].startGame()
+            # reset the game to its initial state after it finishes
+            self.gamesArray[userChoice - 1].__init__(self.gamesArray[userChoice - 1].getTitle())
+
+            print("Press q to go back to the menu.")
+            while input().lower() != "q":
+                pass
+            os.system("cls")
+
         except AttributeError:
             raise Exception("Game " + str(userChoice) + " has no startGame method.")
 

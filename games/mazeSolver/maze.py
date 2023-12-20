@@ -29,7 +29,7 @@ class Maze(MiniGame):
         self.testMaze.tracePath({agent : path} ,delay=120)
 
     def startGame(self):
-        helper = Maze(self.getTitle())
+        # helper = Maze(self.getTitle())
 
         self.testMaze.CreateMaze()
         self.testAgent = agent(self.testMaze, self.xStartPosition, self.yStartPosition, shape='square', color='red',

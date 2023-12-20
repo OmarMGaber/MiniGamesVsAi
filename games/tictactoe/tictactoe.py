@@ -37,11 +37,11 @@ class TicTacToe(MiniGame):
             self.aiTurn = self.player2
 
     @staticmethod
-    def printBoard(board):
+    def printBoard(board, tab=0):
         i = 0
-        print(" ====Board====")
+        print("\t" * tab, " ====Board====")
         for row in board:
-            print(' | ', end='')
+            print("\t" * tab, ' | ', end='')
             for col in row:
                 if col == TicTacToe.emptySpotChar:
                     print(i + 1, end=' | ')
@@ -51,9 +51,9 @@ class TicTacToe(MiniGame):
 
             print()  # newline
             if i != 9:
-                print(" -------------")
+                print("\t" * tab, " -------------")
 
-        print(" =============\n")
+        print("\t" * tab, " =============\n")
 
     def undoMove(self, move):
         self.board[move[0]][move[1]] = TicTacToe.emptySpotChar
@@ -177,23 +177,25 @@ class TicTacToe(MiniGame):
             print("Playing against human.")
 
     def printGameSettings(self):
-        print("Game Settings:")
+        print("\nGame Settings:")
 
         if self.isVsAI:
-            print("Playing against AI")
-            print("AI Algorithm: " + self.aiAlgorithm)
-            print("AI Turn: " + self.aiTurn)
+            print("\tPlaying against AI")
+            print("\tAI Algorithm: " + self.aiAlgorithm)
+            print("\tAI Turn: " + self.aiTurn)
         else:
-            print("Playing against human")
+            print("\tPlaying against human")
 
-        print("Player 1: " + self.player1)
-        print("Player 2: " + self.player2)
-        print("Current Turn: " + self.currentTurn)
-        print("Board: ")
+        print("\tPlayer 1: " + self.player1)
+        print("\tPlayer 2: " + self.player2)
+        print("\tCurrent Turn: " + self.currentTurn)
+        print("\tBoard: ")
+        self.printBoard(self.board, 2)
+        input("\nPress any key to start playing...")
 
     def startGame(self):
 
-        print("Welcome to Tic Tac Toe!")
+        print("Welcome to Tic Tac Toe!\n")
         self.getGameSettingsFromUser()
         self.printGameSettings()
 
@@ -218,3 +220,9 @@ class TicTacToe(MiniGame):
                 break
 
             self.switchTurn()
+
+
+# for testing
+if __name__ == "__main__":
+    game = TicTacToe("Tic Tac Toe")
+    game.startGame()

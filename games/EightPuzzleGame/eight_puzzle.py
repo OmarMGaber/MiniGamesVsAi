@@ -124,7 +124,8 @@ class EightPuzzle(MiniGame):
     @staticmethod
     def count_inversions(board):
         flat_board = [val for Row in board for val in Row if val != 0]
-        inversions = sum(1 for i in range(len(flat_board)) for j in range(i + 1, len(flat_board)) if flat_board[i] > flat_board[j])
+        inversions = sum(
+            1 for i in range(len(flat_board)) for j in range(i + 1, len(flat_board)) if flat_board[i] > flat_board[j])
         return inversions
 
     @staticmethod
@@ -159,7 +160,8 @@ class EightPuzzle(MiniGame):
 
                 if EightPuzzle.safeMove(new_tile_pos[0], new_tile_pos[1]):
                     # Create a child Node
-                    child = EightPuzzle.newNode(minimum.matrix, minimum.empty_tile_pos, new_tile_pos, minimum.level + 1, minimum)
+                    child = EightPuzzle.newNode(minimum.matrix, minimum.empty_tile_pos, new_tile_pos, minimum.level + 1,
+                                                minimum)
 
                     # Add child to list of live nodes
                     pq.push(child)
@@ -235,16 +237,19 @@ class EightPuzzle(MiniGame):
                 print(initial[i[0]][i[1]], end=", ")
                 available_moves.append(initial[i[0]][i[1]])
             print()
-            number = input()
-            if int(number) in available_moves:
-                k = EightPuzzle.find_element_2d(initial, int(number))
-                initial[empty_tile_pos[0]][empty_tile_pos[1]] = initial[k[0]][k[1]]
-                initial[k[0]][k[1]] = 0
-                empty_tile_pos = [k[0], k[1]]
-                if initial == goal:
-                    print("You Reached Goal State!")
-                    return
-            else:
+            try:
+                number = input()
+                if int(number) in available_moves:
+                    k = EightPuzzle.find_element_2d(initial, int(number))
+                    initial[empty_tile_pos[0]][empty_tile_pos[1]] = initial[k[0]][k[1]]
+                    initial[k[0]][k[1]] = 0
+                    empty_tile_pos = [k[0], k[1]]
+                    if initial == goal:
+                        print("You Reached Goal State!")
+                        return
+                else:
+                    print("You Should Enter on of the given Tiles!")
+            except ValueError:  # may occur when user enter a string
                 print("You Should Enter on of the given Tiles!")
 
     def startGame(self):
@@ -256,9 +261,9 @@ class EightPuzzle(MiniGame):
         elif S == "2":
             print("1- Greedy\n2- A*")
             A = input("Enter Which Algorithm you want to apply?: ")
-            if A == 1:
+            if A == "1":
                 EightPuzzle.greedy()
-            elif A == 2:
+            elif A == "2":
                 EightPuzzle.Astar()
             else:
                 print("Error in input!!")

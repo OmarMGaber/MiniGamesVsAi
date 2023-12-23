@@ -24,12 +24,12 @@ class TestTicTacToe(unittest.TestCase):
     def test_make_move(self):
         move = (0, 0)
         self.game.makeMove(move)
-        self.assertEqual(self.game.board[0][0], self.game.currentTurn)
+        self.assertEqual(self.game.board[0][0], self.game.currentPlayer)
 
     def test_switch_turn(self):
-        initial_turn = self.game.currentTurn
+        initial_turn = self.game.currentPlayer
         self.game.switchTurn()
-        self.assertNotEqual(self.game.currentTurn, initial_turn)
+        self.assertNotEqual(self.game.currentPlayer, initial_turn)
 
     def test_check_win_horizontal(self):
         self.game.board = [['X', 'X', 'X'], [' ', 'O', 'O'], [' ', ' ', ' ']]

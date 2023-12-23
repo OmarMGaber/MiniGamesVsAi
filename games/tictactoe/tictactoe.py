@@ -1,8 +1,12 @@
+import smartGame
 import utilities as util
+import tkinter as tk
+
 from games.miniGame import MiniGame
+import algorithms.minimax
 
 
-class TicTacToe(MiniGame):
+class TicTacToe(smartGame.SmartGame):
     emptySpotChar = " "
     player1, player2 = 'X', 'O'
 
@@ -11,8 +15,9 @@ class TicTacToe(MiniGame):
         self.boardSideLength = 3
         self.board = [[TicTacToe.emptySpotChar for _ in range(self.boardSideLength)] for _ in
                       range(self.boardSideLength)]
-        self.currentTurn = "X"
-        self.aiTurn = None
+        self.currentPlayer = "X"
+        self.humanPlayer = None
+        self.aiPlayer = None
         self.isVsAI, self.aiAlgorithm = False, None
 
     def getTitle(self):
@@ -25,16 +30,18 @@ class TicTacToe(MiniGame):
     def setAiAlgorithm(self, aiAlgorithm):
         self.aiAlgorithm = aiAlgorithm
         self.isVsAI = True
-        if self.aiTurn is None:
-            self.aiTurn = self.player2
+        if self.aiPlayer is None:
+            self.aiPlayer = self.player2
 
     def setAiTurn(self, num):
         if self.aiAlgorithm is None:
             raise Exception("AI Algorithm not set")
         if num == 1:
-            self.aiTurn = self.player1
+            self.aiPlayer = self.player1
+            self.humanPlayer = self.player2
         elif num == 2:
-            self.aiTurn = self.player2
+            self.aiPlayer = self.player2
+            self.humanPlayer = self.player1
 
     @staticmethod
     def printBoard(board, tab=0):
@@ -55,8 +62,10 @@ class TicTacToe(MiniGame):
 
         print("\t" * tab, " =============\n")
 
-    def undoMove(self, move):
-        self.board[move[0]][move[1]] = TicTacToe.emptySpotChar
+    @staticmethod
+    def undoMove(gameState, move):
+        gameState.board[move[0]][move[1]] = TicTacToe.emptySpotChar
+        gameState.switchTurn()
 
     @staticmethod
     def checkWin(board):
@@ -87,12 +96,12 @@ class TicTacToe(MiniGame):
         return True
 
     def switchTurn(self):
-        if self.currentTurn == self.player1:
-            self.currentTurn = self.player2
+        if self.currentPlayer == self.player1:
+            self.currentPlayer = self.player2
         else:
-            self.currentTurn = self.player1
+            self.currentPlayer = self.player1
 
-    def possibleMoves(self):
+    def getPossibleMoves(self):
         moves = []
         for row in range(self.boardSideLength):
             for col in range(self.boardSideLength):
@@ -108,11 +117,13 @@ class TicTacToe(MiniGame):
         else:
             return False
 
-    def makeMove(self, move):
-        self.board[move[0]][move[1]] = self.currentTurn
+    @staticmethod
+    def makeMove(gameState, move):
+        gameState.board[move[0]][move[1]] = gameState.currentPlayer
+        gameState.switchTurn()
 
     def getPlayerMove(self):
-        print("Player " + self.currentTurn + "'s turn")
+        print("Player " + self.currentPlayer + "'s turn")
         move = None
         while True:
             try:
@@ -137,12 +148,12 @@ class TicTacToe(MiniGame):
     @staticmethod
     def printWinnerPrompt(game, winner):
         if winner == game.player1:
-            if game.isVsAI and game.aiTurn == game.player1:
+            if game.isVsAI and game.aiPlayer == game.player1:
                 print("AI wins!")
             else:
                 print("Player X wins!")
         else:
-            if game.isVsAI and game.aiTurn == game.player2:
+            if game.isVsAI and game.aiPlayer == game.player2:
                 print("AI wins!")
             else:
                 print("Player O wins!")
@@ -153,15 +164,9 @@ class TicTacToe(MiniGame):
         userChoice = util.getAndValidateUserInput(["y", "n", "Y", "N"], "Enter your choice: ",
                                                   "Invalid choice. Please try again.")
         if userChoice.lower() == "y":
-            print("Choose your AI algorithm: ")
-            print("1: Minimax")
-            print("2: Alpha-Beta Pruning")
-            userChoice = util.getAndValidateUserInput(["1", "2"], "Enter your choice: ",
-                                                      "Invalid choice. Please try again.")
-            if userChoice == "1":
-                pass  # self.setAiAlgorithm(Minimax.Minimax())
-            else:
-                pass  # self.setAiAlgorithm(AlphaBetaPruning.AlphaBetaPruning())
+            print("Playing against AI.")
+            self.setAiAlgorithm(algorithms.minimax.Minimax())
+            print("AI Algorithms: " + self.aiAlgorithm.name())
 
             print("Choose your turn: ")
             print("1: X")
@@ -181,14 +186,14 @@ class TicTacToe(MiniGame):
 
         if self.isVsAI:
             print("\tPlaying against AI")
-            print("\tAI Algorithm: " + self.aiAlgorithm)
-            print("\tAI Turn: " + self.aiTurn)
+            print("\tAI Algorithm: " + self.aiAlgorithm.name())
+            print("\tAI Turn: " + self.aiPlayer)
         else:
             print("\tPlaying against human")
 
         print("\tPlayer 1: " + self.player1)
         print("\tPlayer 2: " + self.player2)
-        print("\tCurrent Turn: " + self.currentTurn)
+        print("\tCurrent Turn: " + self.currentPlayer)
         print("\tBoard: ")
         self.printBoard(self.board, 2)
         input("\nPress any key to start playing...")
@@ -200,13 +205,14 @@ class TicTacToe(MiniGame):
         self.printGameSettings()
 
         while True:
-            self.printBoard(self.board)
-            if self.isVsAI and self.currentTurn == self.aiTurn:
+            if self.isVsAI and self.currentPlayer == self.aiPlayer:
                 move = self.aiAlgorithm.getMove(self)
-                self.makeMove(move)
+                self.makeMove(self, move)
             else:
+                self.printBoard(self.board)
+
                 move = self.getPlayerMove()
-                self.makeMove(move)
+                self.makeMove(self, move)
 
             winner = self.checkWin(self.board)
             if winner is not None:
@@ -218,8 +224,6 @@ class TicTacToe(MiniGame):
                 self.printBoard(self.board)
                 print("Draw!")
                 break
-
-            self.switchTurn()
 
 
 # for testing

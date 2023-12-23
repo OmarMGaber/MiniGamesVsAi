@@ -1,8 +1,6 @@
-import smartGame
+from games import smartGame
 import utilities as util
-import tkinter as tk
 
-from games.miniGame import MiniGame
 import algorithms.minimax
 
 
